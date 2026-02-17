@@ -15,7 +15,25 @@ connectCloudinary()
 
 // middleware
 app.use(express.json())
-app.use(cors({}))
+const allowedOrigins = [
+  'https://forever-site-frontend.vercel.app/',    
+  'https://forever-site-admin.vercel.app/',      
+  'http://localhost:5173',                 
+  'http://localhost:5174',
+  'http://localhost:4000'                 
+];
+
+const corsOptions = {
+    origin: function (origin, callback) {
+        if(!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    }
+}
+
+app.use(cors(corsOptions));
 
 // API endpoints
 app.use('/api/user', userRouter)
