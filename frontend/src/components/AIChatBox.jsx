@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MessageCircle, X, Send, Sparkles, Loader2 } from 'lucide-react';
-import axios from 'axios'; 
+import axios from 'axios';
 import { backendUrl } from '../context/ShopContext'
 
 const AIChatBox = () => {
@@ -25,19 +25,19 @@ const AIChatBox = () => {
         setLoading(true);
 
         try {
-            
-            const response = await axios.post('https://forever-site-gamma.vercel.app/api/ai/chat', { 
-                userQuery: input 
+
+            const response = await axios.post(`${backendUrl}/api/ai/chat`, {
+                userQuery: input
             });
 
             const aiData = response.data;
-            
-            const aiMsg = { 
-                role: 'ai', 
+
+            const aiMsg = {
+                role: 'ai',
                 content: aiData.analysis,
-                recommendations: aiData.recommendations 
+                recommendations: aiData.recommendations
             };
-            
+
             setMessages(prev => [...prev, aiMsg]);
         } catch (error) {
             setMessages(prev => [...prev, { role: 'ai', content: "An error happend when trying to connect with the AI" }]);
@@ -67,14 +67,37 @@ const AIChatBox = () => {
                         {messages.map((msg, index) => (
                             <div key={index} className={`max-w-[85%] p-3 rounded-lg text-sm ${msg.role === 'user' ? 'bg-black text-white self-end rounded-tr-none' : 'bg-white border text-gray-800 self-start rounded-tl-none'}`}>
                                 {msg.content}
-                                
+
                                 {/* عرض المنتجات المقترحة إذا وجدت */}
                                 {msg.recommendations && (
-                                    <div className="mt-3 flex flex-col gap-2">
+                                    <div className="mt-4 flex flex-col gap-3">
                                         {msg.recommendations.map((item, i) => (
-                                            <div key={i} className="bg-pink-50 p-2 rounded border border-pink-100">
-                                                <p className="font-bold text-pink-700">{item.productName}</p>
-                                                <p className="text-[11px] text-gray-600 leading-tight">{item.reason}</p>
+                                            <div
+                                                key={i}
+                                                className="flex gap-3 bg-white p-2 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
+                                                onClick={() => window.location.href = `/product/${item.productId}`}
+                                            >
+                                                {/* صورة المنتج */}
+                                                <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-50 flex-shrink-0">
+                                                    <img
+                                                        src={item.image}
+                                                        alt={item.productName}
+                                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                                                    />
+                                                </div>
+
+                                                {/* تفاصيل المنتج */}
+                                                <div className="flex flex-col justify-center overflow-hidden">
+                                                    <p className="font-bold text-xs text-gray-800 truncate">
+                                                        {item.productName}
+                                                    </p>
+                                                    <p className="text-[10px] text-gray-500 line-clamp-2 leading-tight mt-0.5">
+                                                        {item.reason}
+                                                    </p>
+                                                    <div className="flex justify-between items-center mt-1">
+                                                        <span className="text-[10px] text-blue-500 font-medium">View Details →</span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         ))}
                                     </div>
