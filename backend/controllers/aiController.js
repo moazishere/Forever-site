@@ -14,7 +14,8 @@ const aiChat = async (req, res) => {
             name: p.name,
             description: p.description,
             category: p.category,
-            price: p.price
+            price: p.price,
+            image: p.image[0]
         }));
 
         const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
@@ -42,7 +43,8 @@ const aiChat = async (req, res) => {
             { 
               "productName": "Product Name", 
               "reason": "Explain why this product suits their request", 
-              "productId": "The actual product ID" 
+              "productId": "The actual product ID",
+              "image": "image url"
             }
           ]
         }
