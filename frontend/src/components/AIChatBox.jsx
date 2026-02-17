@@ -26,7 +26,7 @@ const AIChatBox = () => {
 
         try {
             
-            const response = await axios.post(backendUrl + '/api/ai/chat', { 
+            const response = await axios.post('https://forever-site-gamma.vercel.app/api/ai/chat', { 
                 userQuery: input 
             });
 
