@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
     cartData: {
         type: Object,
         default: {}
+    },
+    favourites: {
+        type: [String],
+        default: []
     }
 }, {minimize:false})
 

@@ -33,6 +33,45 @@ const registerUser = async (req, res) => {
     }
 }
 
+const addToWishlistItems = async (req, res) => {
+    const { productId } = req.body
+    const userId = req.userId
+
+    try {
+        const user = await User.findById(userId)
+
+        if(!user) {
+            return res.json({error: "User not found"})
+        }
+
+        if (!user.favourites.includes(productId)) {
+            user.favourites.push(productId)
+        } else {
+            user.favourites = user.favourites.filter((id) => id !== productId)
+        }
+        await user.save()
+        res.json({success: true, favourites: user.favourites})
+    } catch (error) {
+        res.json({ error: error.message })
+    }
+}
+
+const getWishlistItems = async (req, res) => {
+    const userId = req.userId
+
+    try {
+        const user = await User.findById(userId)
+
+        if(!user) {
+            return res.status(404).json({success: false, error: 'User not found'})
+        }
+
+        res.json({success: true,favourites: user.favourites})
+    } catch(error) {
+        res.json({error: error.message})
+    }
+}
+
 
 const adminLogin = async (req, res) => {
     try {
@@ -52,4 +91,4 @@ const adminLogin = async (req, res) => {
         res.status(500).json({ success: false, message: error.message })
     }
 }
-export { loginUser, registerUser, adminLogin }
+export { loginUser, registerUser, adminLogin, addToWishlistItems, getWishlistItems }
