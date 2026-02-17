@@ -16,8 +16,8 @@ connectCloudinary()
 // middleware
 app.use(express.json())
 const allowedOrigins = [
-  'https://forever-site-frontend.vercel.app/',    
-  'https://forever-site-admin.vercel.app/',      
+  'https://forever-site-frontend.vercel.app',    
+  'https://forever-site-admin.vercel.app',      
   'http://localhost:5173',                 
   'http://localhost:5174',
   'http://localhost:4000'                 
