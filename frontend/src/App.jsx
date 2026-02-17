@@ -19,7 +19,7 @@ import SearchBar from './components/Searchbar'
 import Cart from './pages/Cart'
 import Verify from './pages/Verify'
 import Wishlist from './pages/Wishlist'
-
+import AIChatBox from './components/AIChatBox'
 const App = () => {
   return(
     <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]'>
@@ -39,6 +39,7 @@ const App = () => {
         <Route path='/verify' element={<Verify />} />
         <Route path='/wishlist' element={<Wishlist />} />
       </Routes>
+      <AIChatBox />
       <Footer />
     </div>
   )

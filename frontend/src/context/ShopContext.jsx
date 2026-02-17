@@ -17,14 +17,44 @@ const ShopContextProvider = (props) => {
     const [token, setToken] = useState('')
     const navigate = useNavigate()
     // Accept an id (string) and toggle its presence in wishlistItems
-    const toggleWishlist = (id) => {
-        if (!id) return
-        setWishlistItems(prev => {
-            if (prev && prev.includes(id)) {
-                return prev.filter(item => item !== id)
+    const toggleWishlist = async (productId) => {
+        try {
+            if (!productId) return
+            if (!token) return
+            setWishlistItems((prev) =>
+                prev.includes(productId)
+                    ? prev.filter((id) => id !== productId)
+                    : [...prev, productId]
+            )
+            const response = await axios.post(backendUrl + '/api/user/addWishlistItem', { productId }, { headers: { token } })
+
+            if (response.data.success) {
+                console.log(response.data);
             }
-            return [...(prev || []), id]
-        })
+            if (!response.data.success) {
+                // لو صار خطأ، رجع الحالة القديمة
+                setWishlistItems((prev) =>
+                    prev.includes(productId)
+                        ? prev.filter((id) => id !== productId)
+                        : [...prev, productId]
+                );
+                console.log(response.data.message)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const getWishlistItems = async (token) => {
+        try {
+
+            const response = await axios.post(backendUrl + '/api/user/getWishlistItems', {}, { headers: { token } })
+            if (response.data.success) {
+                setWishlistItems(response.data.favourites)
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const addToCart = async (itemId, size) => {
@@ -129,9 +159,9 @@ const ShopContextProvider = (props) => {
 
     const getUserCart = async (token) => {
         try {
-            
-            const response = await axios.post(backendUrl + '/api/cart/get', {},{headers: { token }})
-            if(response.data.success) {
+
+            const response = await axios.post(backendUrl + '/api/cart/get', {}, { headers: { token } })
+            if (response.data.success) {
                 setCartItems(response.data.cartData)
             }
         } catch (error) {
@@ -145,17 +175,18 @@ const ShopContextProvider = (props) => {
     }, [])
 
     useEffect(() => {
-        if (!token && localStorage.getItem('token')) {
-            setToken(localStorage.getItem('token'))
-            getUserCart(localStorage.getItem('token'))
+        const storedToken = localStorage.getItem('token')
+        if (storedToken) {
+            setToken(storedToken)
+            getUserCart(storedToken)
+            getWishlistItems(storedToken)
         }
-        
     }, [])
 
     const value = {
         products, currency, delivery_fee, updateQuantity,
         search, setSearch, showSearch, setShowSearch, wishlistItems, setWishlistItems,
-        cartItems, setCartItems, addToCart, getCartCount, toggleWishlist,
+        getWishlistItems, cartItems, setCartItems, addToCart, getCartCount, toggleWishlist,
         getCartAmount, navigate, backendUrl, setToken, token
     }
 

@@ -7,7 +7,7 @@ import RelatedProducts from '../components/RelatedProducts'
 const Product = () => { 
 
  const { productId } = useParams() 
- const { products, currency, addToCart, wishlistItems, toggleWishlist } = useContext(ShopContext) 
+ const { products, currency, addToCart, wishlistItems, toggleWishlist, token } = useContext(ShopContext) 
  
  const [productData, setProductData] = useState(null) 
  const [image, setImage] = useState('') 
@@ -106,12 +106,13 @@ const Product = () => {
      ADD TO CART 
     </button> 
     
-    {/* Add/Remove from Wishlist */}
+    {/* Add/Remove from Wishlist */}{
+      !token ? '' : 
     <button onClick={()=>{toggleWishlist(productData._id)}}
      className={`px-5 py-4 rounded-none text-base font-light tracking-widest uppercase transition duration-300
        ${isFavorite ? 'bg-red-600 text-white border-red-600 hover:bg-red-700': 'border border-gray-400 text-gray-700 hover:border-black hover:text-black'}`}>{
         isFavorite ? 'REMOVE FROM WISHLIST' : 'ADD TO WISHLIST'
-     }</button>
+     }</button>}
 
    </div>
 
