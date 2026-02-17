@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MessageCircle, X, Send, Sparkles, Loader2 } from 'lucide-react';
 import axios from 'axios'; 
+import { backendUrl } from '../context/ShopContext'
 
 const AIChatBox = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -25,7 +26,7 @@ const AIChatBox = () => {
 
         try {
             
-            const response = await axios.post('http://localhost:4000/api/ai/chat', { 
+            const response = await axios.post(backendUrl + '/api/ai/chat', { 
                 userQuery: input 
             });
 
